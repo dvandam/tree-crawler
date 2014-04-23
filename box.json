@@ -1,0 +1,6 @@
+{
+    "directories": ["target/library", "target/vendor"],
+    "main": "target/cli/program.php",
+    "output": "build/program.phar",
+    "stub": true
+}
