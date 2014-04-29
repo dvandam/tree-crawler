@@ -1,26 +1,36 @@
-.PHONY: build
-build: test clean archive-source
+SHA:=$(shell git rev-parse HEAD)
+COMMIT_DATE:=$(shell git log --date=iso -1 --format=%cd)
+PHPUNIT_LOG:=$(SHA).xml
+TARGET_DIRECTORY:=TARGET_DIRECTORY/$(SHA)
+BUILD:=build/$(SHA)
+
+$(BUILD): $(PHPUNIT_LOG)
+	composer install --no-dev
 	mkdir -p build
 	box build
-	mv build/program.phar build/program
-	chmod +x build/program
-	rm -rf target
+	mv build/program.phar $(BUILD)
+	chmod +x $(BUILD)
+	cp $(BUILD) build/program
+
+$(PHPUNIT_LOG): vendor/bin/phpunit $(TARGET_DIRECTORY)
+	vendor/bin/phpunit --colors --log-junit $(PHPUNIT_LOG) $(TARGET_DIRECTORY)/tests
+	touch -d "$(COMMIT_DATE)" $(PHPUNIT_LOG)
+
+$(TARGET_DIRECTORY):
+	if [ ! -d $(TARGET_DIRECTORY)/vendor ]; then mkdir -p $(TARGET_DIRECTORY)/vendor \
+	&& git archive HEAD | tar -x -C $(TARGET_DIRECTORY) \
+	&& cp -r vendor/* $(TARGET_DIRECTORY)/vendor \
+	&& find $(TARGET_DIRECTORY) -exec touch -d "$(COMMIT_DATE)" {} \; ; \
+	fi
 
 .PHONY: test
-test: install-dev
+test: vendor/bin/phpunit
 	vendor/bin/phpunit --colors tests
 
-.PHONY: install-dev
-install-dev:
+vendor/bin/phpunit:
 	composer install
+	find vendor -exec touch -d "$(COMMIT_DATE)" {} \; \
 
 .PHONY: clean
 clean:
-	composer install --no-dev
-	rm -rf target
-
-.PHONY: archive-source
-archive-source:
-	mkdir -p target/vendor
-	git archive HEAD | tar -x -C target
-	cp -r vendor/* target/vendor
+	rm -rf TARGET_DIRECTORY
