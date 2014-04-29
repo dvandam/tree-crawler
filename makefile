@@ -34,3 +34,9 @@ vendor/bin/phpunit:
 .PHONY: clean
 clean:
 	rm -rf target
+	composer install --no-dev
+
+.PHONY clean-all:
+clean-all: clean
+	rm -rf build
+	git clean -f
