@@ -2,5 +2,6 @@
     "directories": ["target/library", "target/vendor"],
     "main": "target/cli/program.php",
     "output": "build/program.phar",
-    "stub": true
+    "stub": true,
+    "compression": "BZ2"
 }
