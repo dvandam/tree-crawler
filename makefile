@@ -1,7 +1,7 @@
 SHA:=$(shell git rev-parse HEAD)
 COMMIT_DATE:=$(shell git log --date=iso -1 --format=%cd)
 PHPUNIT_LOG:=$(SHA).xml
-TARGET_DIRECTORY:=TARGET_DIRECTORY/$(SHA)
+TARGET_DIRECTORY:=target
 BUILD:=build/$(SHA)
 
 $(BUILD): $(PHPUNIT_LOG)
@@ -33,4 +33,4 @@ vendor/bin/phpunit:
 
 .PHONY: clean
 clean:
-	rm -rf TARGET_DIRECTORY
+	rm -rf target
