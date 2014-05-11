@@ -8,7 +8,7 @@ class Wrapper {
      * @return array
      * @throws Exception
      */
-    public function scandir($directory) {
+    public function scanDir($directory) {
         if (!$this->isDir($directory)) throw new Exception(
             "$directory is not a directory."
         );
