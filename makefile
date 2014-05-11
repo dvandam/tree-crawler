@@ -1,26 +1,27 @@
-SHA:=$(shell git rev-parse HEAD)
+SHA:=$(shell git rev-parse --short HEAD)
 COMMIT_DATE:=$(shell git log --date=iso -1 --format=%cd)
-PHPUNIT_LOG:=$(SHA).xml
-TARGET_DIRECTORY:=target
+PHPUNIT_LOG:=test-results-$(SHA).xml
+TARGET_DIRECTORY:=target/$(SHA)
 BUILD:=build/$(SHA)
 
 $(BUILD): $(PHPUNIT_LOG)
-	composer install --no-dev
 	mkdir -p build
 	box build
 	mv build/program.phar $(BUILD)
 	chmod +x $(BUILD)
 	cp $(BUILD) build/program
 
-$(PHPUNIT_LOG): vendor/bin/phpunit $(TARGET_DIRECTORY)
+$(PHPUNIT_LOG): $(TARGET_DIRECTORY) vendor/bin/phpunit 
 	vendor/bin/phpunit --colors --log-junit $(PHPUNIT_LOG) $(TARGET_DIRECTORY)/tests
 	touch -d "$(COMMIT_DATE)" $(PHPUNIT_LOG)
 
 $(TARGET_DIRECTORY):
 	if [ ! -d $(TARGET_DIRECTORY)/vendor ]; then mkdir -p $(TARGET_DIRECTORY)/vendor \
+	&& composer install --no-dev \
 	&& git archive HEAD | tar -x -C $(TARGET_DIRECTORY) \
 	&& cp -r vendor/* $(TARGET_DIRECTORY)/vendor \
-	&& find $(TARGET_DIRECTORY) -exec touch -d "$(COMMIT_DATE)" {} \; ; \
+	&& find $(TARGET_DIRECTORY) -exec touch -d "$(COMMIT_DATE)" {} \; \
+	&& ln -s $(SHA) target/archive; \
 	fi
 
 .PHONY: test
@@ -29,7 +30,7 @@ test: vendor/bin/phpunit
 
 vendor/bin/phpunit:
 	composer install
-	find vendor -exec touch -d "$(COMMIT_DATE)" {} \; \
+	find vendor -exec touch -d "$(COMMIT_DATE)" {} \;
 
 .PHONY: clean
 clean:

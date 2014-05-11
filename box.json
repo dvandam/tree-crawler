@@ -1,6 +1,6 @@
 {
-    "directories": ["target/library", "target/vendor"],
-    "main": "target/cli/program.php",
+    "directories": ["target/archive/library", "target/archive/vendor"],
+    "main": "target/archive/cli/program.php",
     "output": "build/program.phar",
     "stub": true,
     "compression": "BZ2"
