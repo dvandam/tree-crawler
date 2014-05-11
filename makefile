@@ -21,6 +21,7 @@ $(TARGET_DIRECTORY):
 	&& git archive HEAD | tar -x -C $(TARGET_DIRECTORY) \
 	&& cp -r vendor/* $(TARGET_DIRECTORY)/vendor \
 	&& find $(TARGET_DIRECTORY) -exec touch -d "$(COMMIT_DATE)" {} \; \
+	&& rm -rf target/archive \
 	&& ln -s $(SHA) target/archive; \
 	fi
 
