@@ -1,7 +1,17 @@
+# no backup files
 *~
+
+# no Eclipse settings
 .buildpath
 .project
 .settings
+
+# no idea settings
+.idea
+*.iml
+
+# no build artifacts
 build
 target
 vendor
+test-results*.xml
