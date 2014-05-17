@@ -26,6 +26,9 @@ class TreeBuilder {
             if ($this->fileSystem->isFile($path)) {
                 $nodes[] = new File($path);
             }
+            if ($this->fileSystem->isDir($path)) {
+                $nodes[] = $this->build($path);
+            }
         }
         return new Directory($directory, $nodes);
     }
