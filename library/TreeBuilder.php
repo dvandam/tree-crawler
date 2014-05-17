@@ -22,7 +22,10 @@ class TreeBuilder {
     public function build($directory) {
         $nodes = array();
         foreach ($this->fileSystem->scanDir($directory) as $fileName) {
-            $nodes[] = new File($fileName);
+            $path = $directory . DIRECTORY_SEPARATOR . $fileName;
+            if ($this->fileSystem->isFile($path)) {
+                $nodes[] = new File($path);
+            }
         }
         return new Directory($directory, $nodes);
     }
