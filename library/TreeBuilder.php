@@ -2,7 +2,7 @@
 
 namespace TreeCrawler;
 
-class DirectoryBuilder {
+class TreeBuilder {
     /**
      * @var FileSystem\Wrapper
      */

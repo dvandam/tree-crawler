@@ -1,7 +1,7 @@
 <?php
 namespace TreeCrawler;
 
-class DirectoryBuilderTest extends \PHPUnit_Framework_TestCase {
+class TreeBuilderTest extends \PHPUnit_Framework_TestCase {
     /**
      * @var FileSystem\Wrapper
      */
@@ -18,12 +18,12 @@ class DirectoryBuilderTest extends \PHPUnit_Framework_TestCase {
             )));
     }
 
-    public function testDirectoryBuilderCanBuildDirectory() {
-        $builder = new DirectoryBuilder($this->fileSystem);
-        $directory = $builder->build('foo');
+    public function testTreeBuilderCanBuildDirectoryWithFiles() {
+        $builder = new TreeBuilder($this->fileSystem);
+        $tree = $builder->build('foo');
         $fileNames = array_map(function($treeNode) {
             return $treeNode->getName();
-        }, $directory->getCHildren());
+        }, $tree->getCHildren());
 
         $this->assertEquals(array('bar', 'baz'), $fileNames);
     }
